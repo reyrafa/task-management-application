@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Users\v1;
+namespace App\Http\Controllers\Users\api\v1;
 
 use App\Http\Controllers\BaseController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Livewire\Attributes\Validate;
 
 class UserController extends BaseController
 {
@@ -43,7 +42,7 @@ class UserController extends BaseController
         ], 201);
     }
 
-    // login 
+    // login
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [

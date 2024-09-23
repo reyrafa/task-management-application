@@ -1,8 +1,7 @@
 <?php
 
 use App\Http\Controllers\TaskController;
-use App\Http\Controllers\Users\v1\UserController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Users\api\v1\UserController;
 use Illuminate\Support\Facades\Route;
 
 
