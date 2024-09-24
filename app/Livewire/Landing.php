@@ -11,7 +11,7 @@ class Landing extends Component
         return view('livewire.landing')
             ->layout('layouts.app',
                 [
-                    'title' => 'Task Management',
+                    'title' => 'Home',
                     'page_title' => 'Task Management'
                 ]);
     }
