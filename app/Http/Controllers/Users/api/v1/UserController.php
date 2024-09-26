@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Users\api\v1;
 
+use App\DataTables\TasksDataTable;
 use App\Http\Controllers\BaseController;
 use App\Models\User;
 use Illuminate\Http\Request;

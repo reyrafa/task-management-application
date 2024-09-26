@@ -12,7 +12,7 @@ class Landing extends Component
             ->layout('layouts.app',
                 [
                     'title' => 'Home',
-                    'page_title' => 'Task Management'
+                    'page_title' => 'Home'
                 ]);
     }
 }
