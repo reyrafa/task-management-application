@@ -3,22 +3,22 @@
 namespace App\Livewire;
 
 use App\Models\TaskCategory;
-use App\Models\Tasks;
 use Livewire\Component;
 
 class DisplayTasks extends Component
 {
-    /**
-     * for updating priority 
-     */
-    public function priorityTDClicked() {
-        dump(5);
-    }
+
+    public $editId = null;
 
     /**
-     * Summary of render
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * edit button clicked
      */
+    public function editButtonClicked($editId)
+    {
+        $this->editId = $editId;
+    }
+
+
     public function render()
     {
         $task_categories = TaskCategory::with(['task', 'category'])
