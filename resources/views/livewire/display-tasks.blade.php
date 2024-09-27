@@ -20,21 +20,53 @@
                 <td class="p-3">{{ $task_category->task->due_date }}</td>
                 <td class="p-3">
                     @if($editId == $task_category->id)
-                        <select class="form-control">
-                            <option value=""></option>
+                        <select class="form-select">
+
+                            @foreach(\App\TaskPriority::cases() as $priority)
+                                <option
+                                    value="{{ $priority->value }}"
+                                    {{ old('priority', $task_category->task->priority) == $priority->value ? 'selected' :'' }}>
+                                    {{ ucwords($priority->name) }}
+                                </option>
+                            @endforeach
                         </select>
                     @else
-                        {{ $task_category->task->priority }}
+                        <div
+                            class="text-primary bg-info-subtle border border-primary-subtle p-1 text-center rounded-5">
+
+
+                            {{ ucwords($task_category->task->priority->value) }}
+                        </div>
                     @endif
 
                 </td>
-                <td class="p-3">{{ $task_category->task->status }}</td>
+                <td class="p-3">
+                    @if($editId == $task_category->id)
+                        <select class="form-select">
+                            @foreach(\App\Status::cases() as $status)
+                                <option
+                                    value="{{ $status->value }}" {{ old('status', $task_category->task->status) == $status->value ? 'selected' : '' }}>
+                                    {{ ucwords(str_replace('_', ' ', $status->name)) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    @else
+                        {{ $task_category->task->status }}
+                    @endif
+                </td>
                 <td class="p-3">
                     <div class="d-flex gap-2">
-                        <button wire:click="editButtonClicked({{ $task_category->id }})" class="btn btn-primary">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </button>
-                        <button class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i></button>
+
+                        @if($editId == $task_category->id)
+                            <button class="btn btn-secondary" wire:click="cancelEdit"><i class="fa-solid fa-ban"></i>
+                            </button>
+                            <button class="btn btn-success" wire:click="updateTask"><i class="fa-solid fa-floppy-disk"></i></button>
+                        @else
+                            <button wire:click="editButtonClicked({{ $task_category->id }})" class="btn btn-primary">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                        @endif
+
                     </div>
                 </td>
             </tr>

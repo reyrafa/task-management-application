@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\TaskPriority;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,6 +10,9 @@ class Tasks extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'priority' => TaskPriority::class,
+    ];
     protected $fillable = [
         'user_id',
         'title',
@@ -22,7 +26,9 @@ class Tasks extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function categories(){
+
+    public function categories()
+    {
         return $this->belongsToMany(Tasks::class);
     }
 }
