@@ -51,9 +51,16 @@ class DisplayTasks extends Component
      */
     public function updateTask()
     {
-        $task_category = TaskCategory::find($this->editId);
-
+        $task_category = TaskCategory::with('task')->find($this->editId);
+        $task_category->task->title = $this->title ?? $task_category->task->title;
+        $task_category->task->description = $this->description ?? $task_category->task->description;
+        $task_category->task->due_date = $this->due_date ?? $task_category->task->due_date;
+        $task_category->task->priority = $this->priority ?? $task_category->task->priority;
+        $task_category->task->status = $this->status ?? $task_category->task->status;
+        $task_category->task->save();
         $this->editId = null;
+
+        $this->dispatch('success-creation', ['success', 'Task updated successfully.']);
     }
 
     public function render()

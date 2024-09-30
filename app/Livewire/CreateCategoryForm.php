@@ -15,12 +15,12 @@ class CreateCategoryForm extends Component
     #[Validate('required|unique:categories,name')]
     public $category_name = '';
 
-    /* 
+    /*
      * function to create category to database
      * */
     public function createCategory()
     {
-        $this->validateOnly('name');
+        $this->validate();
         $category = new Categories();
         $category->user_id = Auth::user()->id;
         $category->name = $this->category_name;

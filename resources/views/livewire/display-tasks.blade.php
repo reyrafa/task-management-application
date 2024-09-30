@@ -14,18 +14,23 @@
         @foreach ($task_categories as $task_category)
             <tr>
                 <td class="p-3">{{ $task_category->task->id }}</td>
-                <td class="p-3">{{ $task_category->task->title }}</td>
+                <td class="p-3">
+                    @if($editId == $task_category->id)
+                        <input type="text" wire:model="title" class="form-control">
+                    @else
+                        {{ $task_category->task->title }}
+                    @endif
+                </td>
                 <td class="p-3">{{ $task_category->task->description }}</td>
                 <td class="p-3">{{ $task_category->category->name }}</td>
                 <td class="p-3">{{ $task_category->task->due_date }}</td>
                 <td class="p-3">
                     @if($editId == $task_category->id)
-                        <select class="form-select">
+                        <select class="form-select" wire:model="priority">
 
                             @foreach(\App\TaskPriority::cases() as $priority)
                                 <option
-                                    value="{{ $priority->value }}"
-                                    {{ old('priority', $task_category->task->priority) == $priority->value ? 'selected' :'' }}>
+                                    value="{{ $priority->value }}">
                                     {{ ucwords($priority->name) }}
                                 </option>
                             @endforeach
@@ -42,10 +47,10 @@
                 </td>
                 <td class="p-3">
                     @if($editId == $task_category->id)
-                        <select class="form-select">
+                        <select class="form-select" wire:model="status">
                             @foreach(\App\Status::cases() as $status)
                                 <option
-                                    value="{{ $status->value }}" {{ old('status', $task_category->task->status) == $status->value ? 'selected' : '' }}>
+                                    value="{{ str_replace('_', ' ', $status->value) }}">
                                     {{ ucwords(str_replace('_', ' ', $status->name)) }}
                                 </option>
                             @endforeach
@@ -60,7 +65,8 @@
                         @if($editId == $task_category->id)
                             <button class="btn btn-secondary" wire:click="cancelEdit"><i class="fa-solid fa-ban"></i>
                             </button>
-                            <button class="btn btn-success" wire:click="updateTask"><i class="fa-solid fa-floppy-disk"></i></button>
+                            <button class="btn btn-success" wire:click="updateTask"><i
+                                    class="fa-solid fa-floppy-disk"></i></button>
                         @else
                             <button wire:click="editButtonClicked({{ $task_category->id }})" class="btn btn-primary">
                                 <i class="fa-solid fa-pen-to-square"></i>
