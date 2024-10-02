@@ -1,4 +1,29 @@
 <div wire:poll.2s class="bg-white p-4 rounded">
+    <div class="mb-4">
+        <div class="d-flex border rounded-5 task-header">
+            <div class="p-3 border-end flex-fill">#</div>
+            <div class="p-3 border-end flex-fill">Title</div>
+            <div class="p-3 border-end flex-fill">Description</div>
+            <div class="p-3 border-end flex-fill">Category</div>
+            <div class="p-3 border-end flex-fill">Due Date</div>
+            <div class="p-3 border-end flex-fill">Priority</div>
+            <div class="p-3 border-end flex-fill">Status</div>
+            <div class="p-3 flex-fill">Action</div>
+        </div>
+    </div>
+    @foreach($task_categories as $task_category)
+        <div class="mb-4">
+            <div class="d-flex border rounded-5 task-header">
+                <div class="p-3 border-end flex-fill">#</div>
+                <div class="p-3 border-end flex-fill">Title</div>
+                <div class="p-3 border-end flex-fill">Description</div>
+                <div class="p-3 border-end flex-fill">Category</div>
+                <div class="p-3 border-end flex-fill">Due Date</div>
+                <div class="p-3 border-end flex-fill">Priority</div>
+                <div class="p-3 border-end flex-fill">Status</div>
+                <div class="p-3 flex-fill">Action</div>
+            </div>
+    @endforeach
     <table class="table table-bordered">
         <thead class=" table-secondary">
         <th class="p-3">#</th>
@@ -37,7 +62,12 @@
                         </select>
                     @else
                         <div
-                            class="text-primary bg-info-subtle border border-primary-subtle p-1 text-center rounded-5">
+                            class="{{ ($task_category->task->priority->value == 'low')
+                                    ? 'text-primary bg-info-subtle border border-primary-subtle'
+                                    : ($task_category->task->priority->value == 'medium' ?
+                                    'text-success bg-success-subtle border border-success-subtle'
+                                    : 'text-danger bg-danger-subtle border border-danger-subtle')  }}
+                                    p-1 text-center rounded-5">
 
 
                             {{ ucwords($task_category->task->priority->value) }}
@@ -81,3 +111,13 @@
     </table>
     {{ $task_categories->links() }}
 </div>
+
+@push('styles')
+    <style>
+        .task-header {
+            background: #4d5365;
+            color: white;
+
+        }
+    </style>
+@endpush

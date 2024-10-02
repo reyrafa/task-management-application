@@ -7,10 +7,11 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link" aria-current="page" href="/" wire:navigate>Home</a>
+
                 @guest
-                    <a class="nav-link" href="{{ route('login') }}" wire:navigate>Login</a>
+                 
                 @else
+                    <a class="nav-link" aria-current="page" href="/" wire:navigate>Home</a>
                     <a href="{{ route('task_management') }}" class="nav-link" wire:navigate>Task Management</a>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
