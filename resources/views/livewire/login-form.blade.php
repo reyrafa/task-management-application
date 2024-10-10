@@ -26,7 +26,7 @@
                     <div class="mb-4">
                         <label class="text-uppercase mb-2">password</label>
                         <div>
-                            <input type="text" class="rounded-5 {{ $errors->has('password') ? 'form-error' : 'form-input' }}" wire:model="password"
+                            <input type="password" class="rounded-5 {{ $errors->has('password') ? 'form-error' : 'form-input' }}" wire:model="password"
                                    placeholder="Password">
                             @error('password')
                             <span class="fs-6 ms-2 mt-1 text-danger">{{ $message }}</span>
