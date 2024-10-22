@@ -64,4 +64,21 @@ class User extends Authenticatable implements MustVerifyEmail
         });
     }
 
+    /**
+     * List of categories a user created
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
+    }
+
+    /**
+     * List of tasks a user created
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }
