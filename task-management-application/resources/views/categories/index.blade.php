@@ -16,62 +16,57 @@
                 <div class="uppercase text-lg font-bold text-gray-900">{{ $category->name }}</div>
                 <div class="text-sm text-gray-600">Created On {{ date('Y-m-d', strtotime($category->created_at)) }}</div>
                 <div class="mt-3 flex gap-2">
-                    <div><button class="bg-blue-700 text-blue-100 rounded px-3 py-1 text-sm">Update</button></div>
-                    <div>
-                        <form action="{{ route('categories.destroy', $category->id) }}" method="post">
-                            @method('DELETE')
-                            @csrf
-                            <button class="bg-red-700 text-red-100 rounded px-3 py-1 text-sm"
-                                type="submit">Delete</button>
-                        </form>
+                    <div><button class="bg-blue-700 text-blue-100 rounded px-3 py-1 text-sm">{{ __('Update') }}</button>
+                    </div>
+                    <div x-data>
 
+                        <button class="bg-red-700 text-red-100 rounded px-3 py-1 text-sm"
+                            x-on:click="$dispatch('open-modal', { name: 'confirm-category-deletion', category_id: {{ $category->id }} })">{{ __('Delete') }}</button>
                     </div>
                 </div>
             </div>
         @endforeach
 
     </div>
-    <x-danger-button
-        x-data=""
-        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
-    >{{ __('Delete Account') }}</x-danger-button>
+    <x-modal name="confirm-category-deletion" :show="$errors->has('password')">
+        <div x-data="{ category_id: '{{ old('category_id') }}' }" class="p-6"
+            x-on:open-modal.window="
+                if($event.detail.name === 'confirm-category-deletion'){
+                    category_id = $event.detail.category_id
+                }">
 
-    <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
-        <form method="post" action="{{ route('profile.destroy') }}" class="p-6">
-            @csrf
-            @method('delete')
+            <form method="post" :action="`{{ route('categories.destroy', '') }}/${category_id}`">
+                @csrf
+                @method('delete')
 
-            <h2 class="text-lg font-medium text-gray-900">
-                {{ __('Are you sure you want to delete your account?') }}
-            </h2>
+                <h2 class=" text-lg font-medium text-gray-900">
+                    {{ __('Are you sure you want to delete this category?') }}</h2>
 
-            <p class="mt-1 text-sm text-gray-600">
-                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
-            </p>
+                <input type="hidden" name="category_id" :value="category_id">
 
-            <div class="mt-6">
-                <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
 
-                <x-text-input
-                    id="password"
-                    name="password"
-                    type="password"
-                    class="mt-1 block w-3/4"
-                    placeholder="{{ __('Password') }}"
-                />
+                <p class="mt-1 text-gray-600">
+                    {{ __('Please enter your password to confirm you would like to permanently delete your category.') }}
+                </p>
+                <div class="mt-3">
+                    <input type="password" placeholder="Password" name="password"
+                        class="w-3/4 rounded-md border-slate-300 focus:border-slate-500 focus:ring-slate-600 shadow">
+                    @error('password')
+                        <div class="text-red-500 mt-2 text-sm">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="mt-5 flex justify-end gap-3">
 
-                <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
-            </div>
+                    <button x-on:click="$dispatch('close')" type="button"
+                        class="px-5 py-1 uppercase text-sm tracking-wider hover:bg-slate-100 bg-white border border-slate-300 rounded">{{ __('Close') }}</button>
+                    <button
+                        class="px-5 py-1 uppercase text-sm rounded tracking-wider bg-red-600 text-white hover:bg-red-500"
+                        type="submit">{{ __('Delete') }}</button>
+                </div>
+            </form>
+        </div>
 
-            <div class="mt-6 flex justify-end">
-                <x-secondary-button x-on:click="$dispatch('close')">
-                    {{ __('Cancel') }}
-                </x-secondary-button>
-
-                <x-danger-button class="ms-3">
-                    {{ __('Delete Account') }}
-                </x-danger-button>
-            </div>
-        </form>
     </x-modal>
+
+
 </x-app-layout>
