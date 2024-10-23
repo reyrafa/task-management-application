@@ -49,7 +49,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('categories.edit');
     }
 
     /**
@@ -66,6 +66,6 @@ class CategoryController extends Controller
     public function destroy(DestroyRequest $request, Category $category)
     {
         $category->delete();
-        return redirect()->back()->with('success','Category Deleted Successfully');
+        return redirect()->back()->with('success', 'Category Deleted Successfully');
     }
 }

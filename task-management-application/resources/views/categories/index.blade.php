@@ -20,13 +20,13 @@
                 <div class="uppercase text-lg font-bold text-gray-900">{{ $category->name }}</div>
                 <div class="text-sm text-gray-600">Created On {{ date('Y-m-d', strtotime($category->created_at)) }}
                 </div>
-                <div class="mt-3 flex gap-2">
-                    <div><button
-                            class="bg-blue-700 text-blue-100 rounded px-3 py-1 text-sm">{{ __('Update') }}</button>
+                <div class="mt-3 flex gap-2 items-center">
+                    <div><a href="{{ route('categories.edit', $category->id) }}"
+                            class="bg-blue-700 text-blue-100 rounded px-3 py-1 text-sm block">{{ __('Update') }}</a>
                     </div>
                     <div x-data>
 
-                        <button class="bg-red-700 text-red-100 rounded px-3 py-1 text-sm"
+                        <button class="bg-red-700 text-red-100 rounded px-3 py-1 text-sm block"
                             x-on:click="$dispatch('open-modal', { name: 'confirm-category-deletion', category_id: {{ $category->id }} })">{{ __('Delete') }}</button>
                     </div>
                 </div>
