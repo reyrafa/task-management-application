@@ -11,12 +11,18 @@
                 {{ session('success') }}
             </div>
         @endsession
-        @foreach (auth()->user()->categories as $category)
+        <div class="flex justify-end mb-3">
+            <a href="{{ route('categories.create') }}"
+                class="py-1 px-5 bg-blue-800 text-white rounded uppercase tracking-wider">Add Category</a>
+        </div>
+        @forelse (auth()->user()->categories as $category)
             <div class="bg-white mb-5 rounded p-5">
                 <div class="uppercase text-lg font-bold text-gray-900">{{ $category->name }}</div>
-                <div class="text-sm text-gray-600">Created On {{ date('Y-m-d', strtotime($category->created_at)) }}</div>
+                <div class="text-sm text-gray-600">Created On {{ date('Y-m-d', strtotime($category->created_at)) }}
+                </div>
                 <div class="mt-3 flex gap-2">
-                    <div><button class="bg-blue-700 text-blue-100 rounded px-3 py-1 text-sm">{{ __('Update') }}</button>
+                    <div><button
+                            class="bg-blue-700 text-blue-100 rounded px-3 py-1 text-sm">{{ __('Update') }}</button>
                     </div>
                     <div x-data>
 
@@ -25,7 +31,9 @@
                     </div>
                 </div>
             </div>
-        @endforeach
+        @empty
+            <div class="text-sm text-gray-800">No Categories Yet.</div>
+        @endforelse
 
     </div>
     <x-modal name="confirm-category-deletion" :show="$errors->has('password')">
