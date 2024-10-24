@@ -13,7 +13,23 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return view('tasks.index');
+        $tasks = auth()->user()->tasks()->simplePaginate(5);
+
+        foreach ($tasks as $task) {
+            $events[] = [
+                'title' => $task->title,
+                'extendedProps' => [
+                    'status' => 'done',
+                ],
+                'start' => $task->start_date,
+                'end' => $task->due_date,
+                'backgroundColor' => '#0000cc',
+                'borderColor' => 'transparent',
+                'padding' => '50px',
+
+            ];
+        }
+        return view('tasks.index', ['tasks' => $tasks, 'events' => $events]);
     }
 
     /**

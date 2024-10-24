@@ -10,10 +10,53 @@
         @endsession
         <div class="flex justify-end">
             <a href="{{ route('tasks.create') }}"
-                class="bg-green-800 rounded shadow-lg text-green-200 px-5 py-2 hover:bg-green-500 hover:text-green-800">Create
-                Task</a>
+                class="bg-green-800 rounded shadow-lg text-green-200 px-5 py-2 hover:bg-green-500 hover:text-green-800">{{ __('Create Task') }}</a>
+
+        </div>
+        <div class="mt-5">
+            <div class="bg-white p-10 rounded shadow">
+                <div id="calendar"></div>
+            </div>
 
         </div>
 
     </div>
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var calendarEl = document.getElementById('calendar');
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    events: @json($events),
+                    headerToolbar: {
+                        left: 'prev next',
+                        center: 'title',
+                        right: 'dayGridMonth multiMonthYear'
+                    },
+                    height: 650,
+                    contentHeight: 600,
+
+                    selectable: true,
+                    eventClick: function(info) {
+                        alert('Event: ' + info.event.title);
+                    },
+                    eventDidMount: function(info) {
+                        info.el.style.padding = '10px';
+            
+                   
+                        if (info.event.extendedProps.status === 'done') {
+
+                            // Change background color of row
+                            info.el.style.backgroundColor = 'green';
+
+                          
+                        }
+                    }
+
+
+                });
+                calendar.render();
+            })
+        </script>
+    @endpush
 </x-app-layout>
