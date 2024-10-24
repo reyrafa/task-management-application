@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Category\DestroyRequest;
 use App\Http\Requests\Category\StoreRequest;
+use App\Http\Requests\Category\UpdateRequest;
 use App\Models\Category;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -49,15 +49,17 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('categories.edit');
+        return view('categories.edit', ['category' => $category]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(UpdateRequest $request, Category $category)
     {
-        //
+        $validated_request = $request->validated();
+        $category->update($validated_request);
+        return redirect()->route('categories.index')->with('success', 'Category Updated Successfully!');
     }
 
     /**
