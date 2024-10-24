@@ -14,13 +14,17 @@
 
         </div>
         <div class="mt-5">
-            <div class="bg-white p-10 rounded shadow">
-                <div id="calendar"></div>
-            </div>
-
+            @empty($events)
+                <h2>No tasks yet.</h2>
+            @else
+                <div class="bg-white p-10 rounded shadow">
+                    <div id="calendar"></div>
+                </div>
+            @endempty
         </div>
 
     </div>
+
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -38,18 +42,24 @@
 
                     selectable: true,
                     eventClick: function(info) {
-                        alert('Event: ' + info.event.title);
+                        window.location.href =
+                            `{{ route('tasks.show', '') }}/${info.event.extendedProps.task}`;
                     },
                     eventDidMount: function(info) {
                         info.el.style.padding = '10px';
-            
-                   
-                        if (info.event.extendedProps.status === 'done') {
+                        info.el.style.cursor = 'pointer';
 
-                            // Change background color of row
+                        info.el.addEventListener('mouseover', () => {
+                            info.el.style.backgroundColor = '#6666ff';
+
+                        });
+                        info.el.addEventListener('mouseout', () => {
+                            info.el.style.backgroundColor = info.event.backgroundColor;
+                        });
+
+                        if (info.event.extendedProps.status === 'done') {
                             info.el.style.backgroundColor = 'green';
 
-                          
                         }
                     }
 
@@ -59,4 +69,6 @@
             })
         </script>
     @endpush
+
+
 </x-app-layout>

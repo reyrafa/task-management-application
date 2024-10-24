@@ -6,10 +6,14 @@
     </x-slot>
 
     <div class="mt-7 container mx-auto p-5">
-        <div class="bg-white py-10 rounded shadow-md w-1/2 mx-auto">
-            <x-categories.form action="{{ route('categories.update', $category->id) }}" method="post" button="Update" name="{{ $category->name }}"
-                update="update" />
-        </div>
+        @if (auth()->user()->id === $category->user_id)
+            <div class="bg-white py-10 rounded shadow-md w-1/2 mx-auto">
+
+                <x-categories.form action="{{ route('categories.update', $category->id) }}" method="post" button="Update"
+                    name="{{ $category->name }}" update="update" />
+
+            </div>
+        @endif
 
     </div>
 

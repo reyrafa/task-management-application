@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
+use App\Http\Middleware\Category\CanEdit;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -15,7 +16,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::resource('/categories', CategoryController::class);
+    Route::prefix('/categories')->name('categories.')->middleware(CanEdit::class)->group(function () {
+        Route::get('/{category}/edit', [CategoryController::class, 'edit'])->name('edit');
+    });
+
+    Route::resource('/categories', CategoryController::class)->except(['edit']);
+
     Route::resource('/tasks', TaskController::class);
 });
 

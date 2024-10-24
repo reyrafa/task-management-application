@@ -13,13 +13,15 @@ class TaskController extends Controller
      */
     public function index()
     {
+        $events = [];
         $tasks = auth()->user()->tasks()->simplePaginate(5);
 
         foreach ($tasks as $task) {
             $events[] = [
                 'title' => $task->title,
                 'extendedProps' => [
-                    'status' => 'done',
+                    'status' => $task->status,
+                    'task' => $task->uuid,
                 ],
                 'start' => $task->start_date,
                 'end' => $task->due_date,
@@ -53,9 +55,10 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $uuid)
     {
-        //
+        $task = Task::where('uuid', $uuid)->first();
+        return view('tasks.show', ['task' => $task]);
     }
 
     /**
