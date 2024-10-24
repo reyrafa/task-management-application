@@ -6,6 +6,9 @@ use App\Rules\Category\NameRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Validation Rules for storing category
+ */
 class StoreRequest extends FormRequest
 {
     /**
