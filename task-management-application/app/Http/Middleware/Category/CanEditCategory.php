@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CanEdit
+class CanEditCategory
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,6 @@ class CanEdit
      */
     public function handle(Request $request, Closure $next): Response
     {
-     
         $category_id = $request->route("category")->id;
         $category = Category::where('id', $category_id)->first();
  

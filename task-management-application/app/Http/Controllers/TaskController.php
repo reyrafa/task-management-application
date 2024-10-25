@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Task\StoreRequest;
+use App\Http\Requests\Task\UpdateTaskStatusRequest;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -18,14 +19,17 @@ class TaskController extends Controller
 
         foreach ($tasks as $task) {
             $events[] = [
-                'title' => $task->title,
+                'title' => $task->title . ' - ' . $task->status,
                 'extendedProps' => [
                     'status' => $task->status,
                     'task' => $task->uuid,
+                    'priority' => $task->priority,
                 ],
                 'start' => $task->start_date,
                 'end' => $task->due_date,
-                'backgroundColor' => '#0000cc',
+                'backgroundColor' => $task->priority === 'low' ? '#808080' : '#cc0000',
+                'textColor' => $task->priority === 'low' ? '#f2f2f2' : '#ffe5e5',
+
                 'borderColor' => 'transparent',
                 'padding' => '50px',
 
@@ -83,5 +87,36 @@ class TaskController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function updateTaskStatus(UpdateTaskStatusRequest $request, string $uuid)
+    {
+        $task_model = new Task();
+        $task = $task_model->getTask($uuid);
+        if (!$task) {
+            abort(404);
+        }
+        $task_status = $task->status;
+        $task_priority = $task->priority;
+        switch ($task->status) {
+            case 'pending':
+                $task_status = 'ongoing';
+                break;
+            case 'ongoing':
+                $task_status = 'done';
+                $task_priority = 'low';
+                break;
+            case 'done':
+                $task->delete();
+                return redirect()->route('tasks.index')->with('success', "Task is being archive");
+            default:
+                $task_status = $task->status;
+        }
+        $task->update([
+            'status' => $task_status,
+            'priority' => $task_priority,
+        ]);
+        return redirect()->back()->with('success', "Task is $task_status");
+
     }
 }

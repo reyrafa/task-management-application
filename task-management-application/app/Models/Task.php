@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -54,4 +53,33 @@ class Task extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    /**
+     * Notes of a Task
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function notes()
+    {
+        return $this->hasMany(Note::class);
+    }
+
+    /**
+     * Get Task by uuid or id
+     * Accept 2 parameter uuid and id
+     * @param mixed $uuid
+     * @param mixed $id
+     * @return void
+     */
+    public function getTask($uuid = null, $id = null)
+    {
+        $task = null;
+        if ($uuid !== null) {
+            $task = $this->where('uuid', $uuid)->first();
+        } else if ($id !== null) {
+            $task = $this->find($id);
+        }
+
+        return $task;
+    }
+
 }
