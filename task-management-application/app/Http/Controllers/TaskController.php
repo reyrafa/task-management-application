@@ -26,7 +26,21 @@ class TaskController extends Controller
     public function index()
     {
         $events = [];
-        $tasks = auth()->user()->tasks()->simplePaginate(5);
+        $user_tasks = auth()->user()->tasks();
+        $tasks = $user_tasks->get();
+
+        $priorities = $user_tasks
+            ->where('status', '!=', 'done')
+            ->orderByDesc('priority')
+            ->orderBy('due_date', 'asc')
+            ->take(5)
+            ->get();
+
+        $done_tasks = auth()->user()->tasks()
+            ->where('status', '=', 'done')
+            ->orderByDesc('due_date')
+            ->take(5)
+            ->get();
 
         foreach ($tasks as $task) {
             $events[] = [
@@ -46,7 +60,12 @@ class TaskController extends Controller
 
             ];
         }
-        return view('tasks.index', ['tasks' => $tasks, 'events' => $events]);
+        return view('tasks.index', [
+            'tasks' => $tasks,
+            'events' => $events,
+            'priorities' => $priorities,
+            'done_tasks' => $done_tasks,
+        ]);
     }
 
     /**

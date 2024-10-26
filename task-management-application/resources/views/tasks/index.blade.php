@@ -17,26 +17,59 @@
             @empty($events)
                 <h2>No tasks yet.</h2>
             @else
-                <div class="bg-white p-10 rounded shadow">
-                    <div class="mb-5 flex justify-end">
-                        <div>
-                            <h2 class="text-stone-800 font-bold tracking-wide text-end">Legend</h2>
-                            <div class="flex gap-5 mt-1">
-                                <div class="flex gap-2 items-center">
-                                    <label for="low_priority" class="text-stone-500">{{ __('Low Priority') }}</label>
-                                    <div class="px-2 h-2 bg-stone-500 w-5" id="low_priority"></div>
+                <div class="block md:flex gap-5">
+                    <div class="bg-white p-10 rounded shadow md:w-3/4 mb-4">
+                        <div class="mb-5 flex justify-end">
+                            <div>
+                                <h2 class="text-stone-800 font-bold tracking-wide text-end">Legend</h2>
+                                <div class="flex gap-5 mt-1">
+                                    <div class="flex gap-2 items-center">
+                                        <label for="low_priority" class="text-stone-500">{{ __('Low Priority') }}</label>
+                                        <div class="px-2 h-2 bg-stone-500 w-5" id="low_priority"></div>
 
-                                </div>
-                                <div class="flex gap-2 items-center">
-                                    <label for="high_priority" class="text-red-600">{{ __('High Priority') }}</label>
-                                    <div class="px-2 h-2 bg-red-600 w-5" id="high_priority"></div>
+                                    </div>
+                                    <div class="flex gap-2 items-center">
+                                        <label for="high_priority" class="text-red-600">{{ __('High Priority') }}</label>
+                                        <div class="px-2 h-2 bg-red-600 w-5" id="high_priority"></div>
 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
+                        </div>
+                        <div id="calendar"></div>
                     </div>
-                    <div id="calendar"></div>
+                    <div class="grow">
+                        <div class="bg-white p-5 shadow-lg rounded mb-5">
+                            <div>
+                                <h2 class="tracking-wider font-bold text-red-500 mb-2 uppercase">Urgent Tasks</h2>
+                                <ul class="list-disc list-inside">
+                                    @foreach ($priorities as $urgent)
+                                        <li class="mb-2 text-sm"><a href="{{ route('tasks.show', $urgent->uuid) }}"
+                                                class="hover:text-red-400">
+                                                {{ $urgent->title . __(' (Due on ') . $urgent->due_date . __(')') }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="bg-white p-5 shadow-lg rounded">
+                            <div>
+                                <h2 class="tracking-wider font-bold text-stone-700 mb-2 uppercase">Latest Completed Tasks
+                                </h2>
+                                <ul class="list-disc list-inside">
+                                    @foreach ($done_tasks as $done_task)
+                                        <li class="mb-2 text-sm"><a href="{{ route('tasks.show', $done_task->uuid) }}"
+                                                class="hover:text-green-400">
+                                                {{ $done_task->title }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @endempty
         </div>
@@ -77,7 +110,7 @@
                             info.el.style.backgroundColor = info.event.backgroundColor;
                         });
 
-                       
+
                     }
 
 
