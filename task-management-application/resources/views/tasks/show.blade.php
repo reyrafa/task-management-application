@@ -1,12 +1,39 @@
 <x-app-layout>
+    <x-slot name="title">{{ __('Show Task') }}</x-slot>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('My Task') }}
         </h2>
     </x-slot>
     <div class="mt-7 container mx-auto p-5">
+        @session('error')
+            <div class="bg-red-700 text-red-100 p-4 rounded shadow mb-2 flex items-center justify-between" role="alert">
+                <div>
+                    {{ session('error') }}
+                </div>
+                <div class="">
+                    <button type="button" onclick="this.parentElement.parentElement.remove()"
+                        class="text-2xl text-red-100 hover:text-red-200 font-bold">
+                        &times;
+                    </button>
+                </div>
+
+            </div>
+        @endsession
         @session('success')
-            <div class="bg-green-500 text-green-100 p-4 rounded shadow mb-2" role="alert">{{ session('success') }}</div>
+            <div class="bg-green-700 text-green-100 p-4 rounded shadow mb-2 flex items-center justify-between"
+                role="alert">
+                <div>
+                    {{ session('success') }}
+                </div>
+                <div class="">
+                    <button type="button" onclick="this.parentElement.parentElement.remove()"
+                        class="text-2xl text-green-100 hover:text-green-200 font-bold">
+                        &times;
+                    </button>
+                </div>
+
+            </div>
         @endsession
         @if (auth()->user()->id === $task->user_id)
             <div class="bg-white p-5 rounded">
@@ -35,23 +62,33 @@
                         ])>{{ $task->priority }}</div>
                     </div>
                 </div>
-                <div class="mt-3 text-stone-600 font-bold">
-                    <div>{{ __('Notes') }}</div>
+                <div class="mt-3">
+                    <div class="text-stone-600 font-bold">{{ __('Notes') }}</div>
                     <div>
-                        <ul class="list-inside">
-                            <li>{{ $task->note }}</li>
+                        <ul class="list-disc list-inside text-gray-700">
+                            @foreach ($task->notes as $note)
+                                <li class="indent-5">{{ $note->note }}</li>
+                            @endforeach
+
                         </ul>
                     </div>
                 </div>
                 <div class="mt-10">
                     <div>
-                        <textarea class="w-full rounded" name="note" name="" id="" placeholder="Write down notes.."></textarea>
+                        <form action="{{ route('tasks.store_note', $task->uuid) }}" method="post">
+                            @csrf
+                            <textarea class="w-full rounded" rows="5" name="note" name="" id=""
+                                placeholder="Write down notes.."></textarea>
+                            <button type="submit"
+                                class="py-2 px-4 bg-green-700 rounded mt-2 shadow text-green-50">{{ __('Submit Note') }}</button>
+                        </form>
+
                     </div>
                 </div>
                 <div class="mt-4 flex justify-end gap-4">
-                    
+
                     <div class="flex gap-5">
-                        <a href="#"
+                        <a href="{{ route('tasks.edit', $task->uuid) }}"
                             class="bg-blue-700 py-2 px-4 rounded text-blue-100 text-sm hover:bg-blue-500">{{ __('Update') }}</a>
                         @if ($task->status !== 'done')
                             <form action="{{ route('tasks.update_task_status', $task->uuid) }}" method="post">

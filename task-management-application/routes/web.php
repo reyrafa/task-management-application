@@ -23,12 +23,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('/categories', CategoryController::class)->except(['edit']);
 
-    Route::middleware(CanEditTask::class)->prefix('/tasks')->name('tasks.')->group(function () {
+    Route::middleware(CanEditTask::class)->prefix('/tasks/manage')->name('tasks.')->group(function () {
         Route::get('/{task}', [TaskController::class, 'show'])->name('show');
         Route::put('/{task}/update-task-status', [TaskController::class, 'updateTaskStatus'])->name('update_task_status');
+        Route::post('/{task}/store-note', [TaskController::class, 'store_note'])->name('store_note');
+        Route::get('/{task}/edit', [TaskController::class, 'edit'])->name('edit');
     });
 
-    Route::resource('/tasks', TaskController::class)->except(['show', 'updateTaskStatus']);
+    Route::resource('/tasks', TaskController::class)->except(['show', 'edit']);
 });
 
 Route::middleware('auth')->group(function () {

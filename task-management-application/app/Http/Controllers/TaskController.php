@@ -2,13 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Note\StoreNoteRequest;
 use App\Http\Requests\Task\StoreRequest;
+use App\Http\Requests\Task\UpdateRequest;
 use App\Http\Requests\Task\UpdateTaskStatusRequest;
+use App\Models\Note;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
+
+    public function getTask($uuid)
+    {
+        $task_model = new Task();
+        $task = $task_model->getTask($uuid);
+        return $task;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -68,17 +79,27 @@ class TaskController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $uuid)
     {
-        //
+        $task = $this->getTask($uuid);
+        if (!$task) {
+            return redirect()->back()->with('error', 'No Task Found');
+        }
+        return view('tasks.edit', ['task' => $task]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, string $uuid)
     {
-        //
+        $validated_request = $request->validated();
+        $task = $this->getTask($uuid);
+        if (!$task) {
+            abort(404);
+        }
+        $task->update($validated_request);
+        return redirect()->route('tasks.show', $uuid)->with('success', 'Task Updated Successfully!');
     }
 
     /**
@@ -89,6 +110,12 @@ class TaskController extends Controller
         //
     }
 
+    /**
+     * Update Task Status and Priority
+     * @param \App\Http\Requests\Task\UpdateTaskStatusRequest $request
+     * @param string $uuid
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updateTaskStatus(UpdateTaskStatusRequest $request, string $uuid)
     {
         $task_model = new Task();
@@ -118,5 +145,17 @@ class TaskController extends Controller
         ]);
         return redirect()->back()->with('success', "Task is $task_status");
 
+    }
+
+    /**
+     * Adding Notes to a task
+     * @param \App\Http\Requests\Note\StoreNoteRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store_note(StoreNoteRequest $request)
+    {
+        $request_validated = $request->validated();
+        Note::create($request_validated);
+        return redirect()->back()->with('success', 'Note Added');
     }
 }
